@@ -1,0 +1,27 @@
+csphere-controller:
+   image: 127.0.0.1:5000/csphere/csphere
+   ports: 
+     - "1016:80"
+   volumes:
+     - /home/billwang/docker/data:/data:rw
+   hostname: csphere.server.com
+   restart: always
+   environment:
+     - ROLE=controller
+     - auth_key=auth_key=4de3270bc3cc6e5f584c51a943fa558a9989be06e5ffd9af665fa43a5fb1231d36cb0511492a4851
+
+csphere-agent:
+   image: 127.0.0.1:5000/csphere/csphere
+   environment:
+      - CONTROLLER_ADDR=10.0.2.15:1016
+      - auth_key=auth_key=4de3270bc3cc6e5f584c51a943fa558a9989be06e5ffd9af665fa43a5fb1231d36cb0511492a4851
+   volumes:
+      - /home/billwang/docker/data:/data:rw
+      - /proc:/rootfs/proc:ro
+      - /sys:/rootfs/sys:ro
+      - /etc:/rootfs/etc:rw
+      - /var/run/docker.sock:/var/run/docker.sock
+   net: host
+   hostname: csphere-agent.server.com
+   labels:
+      - "CSPHERE_ROLE=agent"
